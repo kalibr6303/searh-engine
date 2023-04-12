@@ -84,6 +84,7 @@ public class PageUrlFound extends RecursiveTask<List<PageDto>> {
     public List<PageDto> getOnePageUrlFound(String url) {
         List<PageDto> listPageDto = new ArrayList<>();
         Document doc = getConnect(url);
+        if (doc == null) return  null;
         String html = doc.html();
         int status = doc.connection().response().statusCode();
         PageDto pageDto = new PageDto(url, html, status);
