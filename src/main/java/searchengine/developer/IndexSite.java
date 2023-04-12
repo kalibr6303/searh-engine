@@ -46,9 +46,11 @@ public class IndexSite implements Runnable {
         try {
             List<PageDto> pageDtoList = getPageDtoList();
             saveToBase(pageDtoList, site);
-            site.setStatus(StatusType.INDEXED);
-            site.setStatusTime(new Date());
-            siteRepository.save(site);
+            if (site.getStatus() != StatusType.FAILED) {
+                site.setStatus(StatusType.INDEXED);
+                site.setStatusTime(new Date());
+                siteRepository.save(site);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,7 +75,7 @@ public class IndexSite implements Runnable {
 
     protected void saveToBase(List<PageDto> pages, Site site) throws InterruptedException, SQLException, IOException {
         if (!Thread.interrupted()) {
-            if (pages == null) {
+            if (pages.get(0).getStatus() != 200) {
                 site.setLastError("Главная страница недоступна");
                 site.setStatus(StatusType.FAILED);
                 site.setStatusTime(new Date());

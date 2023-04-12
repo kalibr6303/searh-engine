@@ -26,17 +26,25 @@ public class IndexPage implements Runnable {
     @Override
     public void run() {
         Site site = siteRepository.findByUrl(url);
-        String path = link.replaceAll(url, "");
-        Page page = pageRepository.findByPath(path);
-        if (page != null) pageRepository.delete(page);
+        String path;
+
+        if (!site.getUrl().equals(link)) {
+            path = link.replaceAll(url, "");
+            Page page = pageRepository.findByPath(path + "/");
+            if (page != null) {
+                pageRepository.delete(page);
+            }
+        }
+
         PageUrlFound pageUrlFound = new PageUrlFound();
+
         List<PageDto> pageDtoList = pageUrlFound.getOnePageUrlFound(link);
-        if (pageDtoList.isEmpty()) {
-            site.setLastError("Страница недоступна");
+
+        if (pageDtoList == null) {
+            site.setLastError("При выполнении --Add/update page--  страница "  + link + " недоступна ");
             site.setStatusTime(new Date());
             siteRepository.save(site);
         }
-
         else {
             IndexSite indexSite = new IndexSite(siteRepository, pageRepository, url, sitesList, lemma);
             indexSite.saveToBase(pageDtoList, site);

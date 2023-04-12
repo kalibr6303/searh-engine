@@ -95,7 +95,7 @@ public class IndexServiceImpl implements IndexService {
         List<Site> urList = sitesList.getSites();
         for (Site s : urList) {
             String url = s.getUrl();
-            if (link.matches(url + "[^:#]+")) return url;
+            if (link.matches(url + "[^:#]+") || link.matches(url)) return url;
         }
         return null;
     }
