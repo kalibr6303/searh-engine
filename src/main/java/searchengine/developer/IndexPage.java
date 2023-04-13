@@ -41,7 +41,7 @@ public class IndexPage implements Runnable {
         List<PageDto> pageDtoList = pageUrlFound.getOnePageUrlFound(link);
 
         if (pageDtoList == null) {
-            site.setLastError("При выполнении --Add/update page--  страница "  + link + " недоступна ");
+            site.setLastError("При выполнении --Add/update page--  страница "  + link + " не отвечает ");
             site.setStatusTime(new Date());
             siteRepository.save(site);
         }
